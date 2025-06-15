@@ -1,14 +1,16 @@
 import dns.resolver
 import json
-from disposable_email_domains import blocklist
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
 # 경로 설정
+disposable_path = BASE_DIR / "disposable_domains.txt"
 domain_scores_path = BASE_DIR / "domain_scores.json"
 unknown_domains_log = BASE_DIR.parent / "data" / "unknown_domains.txt"
 unknown_domains_log.parent.mkdir(parents=True, exist_ok=True)  # data/ 없으면 생성
+
+blocklist = set(disposable_path.read_text().splitlines())
 
 # 점수 데이터 로딩
 domain_scores = json.loads(domain_scores_path.read_text())
