@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from enum import Enum
 from typing import Optional
 
 class PlanEnum(str, Enum):
