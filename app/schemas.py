@@ -1,9 +1,14 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 
+class PlanEnum(str, Enum):
+    basic = "basic"   # free
+    pro = "pro"
+    ultra = "ultra"
+
 class EmailCheckRequest(BaseModel):
     email: EmailStr
-    plan: str = "free"  # free or basic
+    plan: PlanEnum  # free or basic now
 
 class EmailCheckResponse(BaseModel):
     valid: bool
@@ -11,4 +16,4 @@ class EmailCheckResponse(BaseModel):
     is_disposable: bool
     mx_found: Optional[bool] = None
     domain_score: Optional[int] = None
-    plan: str
+    plan: PlanEnum

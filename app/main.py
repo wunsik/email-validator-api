@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException
-from app.schemas import EmailCheckRequest, EmailCheckResponse
+from fastapi import FastAPI
+from app.schemas import EmailCheckRequest, EmailCheckResponse, PlanEnum
 from app.validator import is_disposable, check_mx, get_domain_score
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,7 +16,7 @@ app.add_middleware(
 def validate_email(request: EmailCheckRequest):
     email = request.email
     domain = email.split("@")[1]
-    plan = request.plan.lower()
+    plan = request.plan
 
     response = {
         "valid": True,
@@ -25,10 +25,10 @@ def validate_email(request: EmailCheckRequest):
         "plan": plan
     }
 
-    if plan in ["basic", "pro"]:
+    if plan in [PlanEnum.pro, PlanEnum.ultra]:
         response["mx_found"] = check_mx(domain)
         response["domain_score"] = get_domain_score(domain)
-    else:
+    else:  # basic
         response["mx_found"] = None
         response["domain_score"] = None
 
