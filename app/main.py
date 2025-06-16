@@ -34,40 +34,12 @@ VALID_API_KEYS = {
     # 예: "ultra_key_xyz": PlanEnum.ultra,
 }
 
-# ✅ 미들웨어로 API Key 인증 + plan 저장
-@app.middleware("http")
-async def authenticate_api_key(request: Request, call_next):
-    # 📌 모든 헤더 출력 (RapidAPI가 보내는지 확인)
-    print("📥 Incoming headers:")
-    for key, value in request.headers.items():
-        print(f"  {key}: {value}")
-
-    headers = {k.lower(): v for k, v in request.headers.items()}
-    api_key = headers.get("x-rapidapi-key")
-
-    if not api_key:
-        print("❌ No API key found in headers.")
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Missing API key")
-    elif api_key not in VALID_API_KEYS:
-        print(f"❌ Invalid API key received: {api_key}")
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid API key")
-    else:
-        print(f"✅ API key accepted: {api_key}")
-
-    if not api_key or api_key not in VALID_API_KEYS:
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid or missing API key")
-
-    request.state.plan = VALID_API_KEYS[api_key]
-    print(f"✅ Authenticated plan: {request.state.plan}")
-    return await call_next(request)
-
 # ✅ plan은 사용자 요청이 아닌, Key 기반으로 서버에서 결정
 @app.post("/validate", response_model=EmailCheckResponse)
 def validate_email(request_body: EmailCheckRequest, request: Request):
     email = request_body.email
     domain = email.split("@")[1]
-    plan = request.state.plan
-
+    plan = PlanEnum.basic
 
     print(f"📥 Email request received: {email}")
     print(f"🔐 Plan based on API key: {plan}")
