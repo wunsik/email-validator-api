@@ -11,7 +11,6 @@ class PlanEnum(str, Enum):
 
 class EmailCheckRequest(BaseModel):
     email: EmailStr = Field(..., example="user@example.com", description="Email address to validate")
-    plan: PlanEnum = Field(..., example="basic", description="Subscription plan: basic, pro, or ultra")
 
 
 class EmailCheckResponse(BaseModel):
