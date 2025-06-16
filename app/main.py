@@ -47,8 +47,10 @@ async def authenticate_api_key(request: Request, call_next):
 
     if not api_key:
         print("❌ No API key found in headers.")
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Missing API key")
     elif api_key not in VALID_API_KEYS:
         print(f"❌ Invalid API key received: {api_key}")
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid API key")
     else:
         print(f"✅ API key accepted: {api_key}")
 
@@ -56,6 +58,7 @@ async def authenticate_api_key(request: Request, call_next):
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid or missing API key")
 
     request.state.plan = VALID_API_KEYS[api_key]
+    print(f"✅ Authenticated plan: {request.state.plan}")
     return await call_next(request)
 
 # ✅ plan은 사용자 요청이 아닌, Key 기반으로 서버에서 결정
