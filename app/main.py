@@ -43,7 +43,7 @@ async def authenticate_api_key(request: Request, call_next):
         print(f"  {key}: {value}")
 
     # 대소문자 둘 다 시도
-    api_key = request.headers.get("x-rapidapi-key") or request.headers.get("X-RapidAPI-Key")
+    api_key = headers.get("x-rapidapi-key")
 
     if not api_key:
         print("❌ No API key found in headers.")
