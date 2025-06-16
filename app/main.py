@@ -37,11 +37,24 @@ VALID_API_KEYS = {
 # ✅ 미들웨어로 API Key 인증 + plan 저장
 @app.middleware("http")
 async def authenticate_api_key(request: Request, call_next):
-    api_key = request.headers.get("x-rapidapi-key")
+    # 📌 모든 헤더 출력 (RapidAPI가 보내는지 확인)
+    print("📥 Incoming headers:")
+    for key, value in request.headers.items():
+        print(f"  {key}: {value}")
+
+    # 대소문자 둘 다 시도
+    api_key = request.headers.get("x-rapidapi-key") or request.headers.get("X-RapidAPI-Key")
+
+    if not api_key:
+        print("❌ No API key found in headers.")
+    elif api_key not in VALID_API_KEYS:
+        print(f"❌ Invalid API key received: {api_key}")
+    else:
+        print(f"✅ API key accepted: {api_key}")
+
     if not api_key or api_key not in VALID_API_KEYS:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid or missing API key")
 
-    # plan 정보를 상태에 저장
     request.state.plan = VALID_API_KEYS[api_key]
     return await call_next(request)
 
