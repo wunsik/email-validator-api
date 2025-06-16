@@ -53,7 +53,7 @@ def validate_email(request_body: EmailCheckRequest, request: Request):
     plan = request.state.plan
 
 
-    print(f"📥 Email request received: {email}"")
+    print(f"📥 Email request received: {email}")
     print(f"🔐 Plan based on API key: {plan}")
 
     response = {
