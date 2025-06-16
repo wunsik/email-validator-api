@@ -52,6 +52,10 @@ def validate_email(request_body: EmailCheckRequest, request: Request):
     domain = email.split("@")[1]
     plan = request.state.plan
 
+
+    print(f"📥 Email request received: {email}"")
+    print(f"🔐 Plan based on API key: {plan}")
+
     response = {
         "valid": True,
         "domain": domain,
