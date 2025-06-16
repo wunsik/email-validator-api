@@ -3,7 +3,20 @@ from app.schemas import EmailCheckRequest, EmailCheckResponse, PlanEnum
 from app.validator import is_disposable, check_mx, get_domain_score
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title="Email Validator API",
+    description="This API allows you to validate emails by checking if they are disposable, if they have valid MX records, and assigning a trust score to the domain.",
+    version="1.0.0",
+    contact={
+        "name": "Aiden Woo",
+        "url": "https://nowebsiteyet.com",
+        "email": "wunsik@gmail.com",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    }
+)
 
 app.add_middleware(
     CORSMiddleware,
